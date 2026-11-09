@@ -3,7 +3,11 @@
 declare(strict_types=1);
 
 use app\usecases\shared\user\VerifyEmailForm;
-use yii\helpers\Html;
+use UIAwesome\Html\Flow\P;
+use UIAwesome\Html\Form\{Button, Form, InputHidden};
+use UIAwesome\Html\Form\Values\{ButtonType, Method};
+use UIAwesome\Html\Heading\H1;
+use yii\helpers\Url;
 use yii\web\View;
 
 /**
@@ -13,10 +17,15 @@ use yii\web\View;
  */
 $this->title = 'Confirm email';
 ?>
-<h1><?= Html::encode($this->title) ?></h1>
-<p>Click the button below to confirm your email address.</p>
-<?= Html::beginForm(['/user/confirm-email', 'token' => $token], 'post') ?>
-<p>
-    <?= Html::submitButton('Confirm') ?>
-</p>
-<?= Html::endForm();
+<?= H1::tag()->content($this->title)->render() ?>
+<?= P::tag()->content('Click the button below to confirm your email address.')->render() ?>
+<?= Form::tag()
+    ->action(Url::to(['/user/confirm-email', 'token' => $token]))
+    ->method(Method::POST)
+    ->html(
+        InputHidden::tag()->name(Yii::$app->request->csrfParam)->value(Yii::$app->request->csrfToken)->render(),
+        P::tag()->html(
+            Button::tag()->type(ButtonType::SUBMIT)->content('Confirm')->render(),
+        )->render(),
+    )
+    ->render() ?>

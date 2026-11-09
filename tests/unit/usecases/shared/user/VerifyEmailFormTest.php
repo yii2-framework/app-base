@@ -13,9 +13,6 @@ use yii\base\InvalidArgumentException;
 
 /**
  * Unit tests for {@see \app\usecases\shared\user\VerifyEmailForm} model.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class VerifyEmailFormTest extends Unit
 {

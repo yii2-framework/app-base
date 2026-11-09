@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace app\usecases\user;
 
 use app\usecases\shared\user\User;
+use Override;
 use yii\data\ActiveDataProvider;
 
 /**
  * Provides search and filtering capabilities for the {@see User} model.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class UserSearch extends User
 {
     /**
      * Returns the validation rules for the search attributes.
      */
+    #[Override]
     public function rules(): array
     {
         return [

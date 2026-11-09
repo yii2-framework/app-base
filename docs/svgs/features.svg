@@ -10,7 +10,7 @@
         <rect class="box-bg" x="20" y="20" width="570" height="100" rx="6"/>
         <rect x="20" y="20" width="4" height="100" fill="#42b883"/>
         <text class="title" x="40" y="50">Console &amp; Web Entrypoints</text>
-        <text class="content" x="40" y="78">CLI &#8226; HelloController &#8226; index.php &#8226; index-test.php</text>
+        <text class="content" x="40" y="78">CLI &#8226; HelloController &#8226; production index.php</text>
         <text class="content" x="40" y="98">Built-in PHP server via router.php &#8226; Separate web/console configs</text>
     </g>
 
@@ -27,7 +27,7 @@
         <rect x="20" y="140" width="4" height="100" fill="#42b883"/>
         <text class="title" x="40" y="170">Quality Tooling</text>
         <text class="content" x="40" y="198">PHPStan level max &#8226; Codeception 5.3 &#8226; PSR-12 / PER 3.0</text>
-        <text class="content" x="40" y="218">Mutation testing &#8226; composer-require-checker &#8226; PHP 8.3 / 8.4 / 8.5</text>
+        <text class="content" x="40" y="218">Rector &#8226; composer-require-checker &#8226; PHP 8.3 / 8.4 / 8.5</text>
     </g>
 
     <g>
@@ -42,7 +42,7 @@
         <rect class="box-bg" x="20" y="260" width="570" height="100" rx="6"/>
         <rect x="20" y="260" width="4" height="100" fill="#42b883"/>
         <text class="title" x="40" y="290">Scaffold Provider</text>
-        <text class="content" x="40" y="318">Ships via yii2-extensions/scaffold &#8226; Declarative manifest</text>
+        <text class="content" x="40" y="318">Ships via php-forge/scaffold &#8226; Declarative manifest</text>
         <text class="content" x="40" y="338">Per-file modes: preserve for config, rbac, and runtime assets</text>
     </g>
 
@@ -51,6 +51,6 @@
         <rect x="610" y="260" width="4" height="100" fill="#42b883"/>
         <text class="title" x="630" y="290">User Authentication</text>
         <text class="content" x="630" y="318">Login &#8226; Signup &#8226; Password reset &#8226; Email verification</text>
-        <text class="content" x="630" y="338">ActiveRecord User + 8 form models, Turnstile-ready contact form</text>
+        <text class="content" x="630" y="338">ActiveRecord User + form models and contact workflow</text>
     </g>
 </svg>

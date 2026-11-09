@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace app\tests\unit\usecases\site;
 
 use app\usecases\shared\view\PhpViewRenderer;
-use app\usecases\site\ContactAction;
+use app\usecases\site\{ContactAction, ContactForm};
 use Codeception\Test\Unit;
 use RuntimeException;
 use Yii;
@@ -13,9 +13,6 @@ use yii\mail\{BaseMailer, MailEvent};
 
 /**
  * Unit tests for {@see ContactAction} form handling and mailer dispatch.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class ContactActionTest extends Unit
 {
@@ -33,6 +30,16 @@ final class ContactActionTest extends Unit
             $response,
             'GET must render the form.',
         );
+        self::assertIsString(
+            $response,
+            'GET must render the form as a string.',
+        );
+        self::assertStringContainsString('name="ContactForm[name]"', $response);
+        self::assertStringContainsString('id="contactform-email"', $response);
+        self::assertStringContainsString('type="email"', $response);
+        self::assertStringContainsString('placeholder="(999) 999-9999"', $response);
+        self::assertStringContainsString('rows="6"', $response);
+        self::assertStringContainsString('type="submit"', $response);
     }
 
     public function testActionContactPostMailerFailure(): void
@@ -49,7 +56,6 @@ final class ContactActionTest extends Unit
                     'phone' => '(555) 123-4567',
                     'subject' => 'Test Subject',
                     'body' => 'Test body content.',
-                    'turnstileToken' => 'test-token',
                 ],
             ],
         );
@@ -95,7 +101,6 @@ final class ContactActionTest extends Unit
                     'phone' => '(555) 123-4567',
                     'subject' => 'Test Subject',
                     'body' => 'Test body content.',
-                    'turnstileToken' => 'test-token',
                 ],
             ],
         );
@@ -141,7 +146,6 @@ final class ContactActionTest extends Unit
                     'phone' => '(555) 123-4567',
                     'subject' => 'Test Subject',
                     'body' => 'Test body content.',
-                    'turnstileToken' => 'test-token',
                 ],
             ],
         );
@@ -170,7 +174,6 @@ final class ContactActionTest extends Unit
                     'phone' => '',
                     'subject' => '',
                     'body' => '',
-                    'turnstileToken' => '',
                 ],
             ],
         );
@@ -191,6 +194,31 @@ final class ContactActionTest extends Unit
             Yii::$app->session->hasFlash('success'),
             'Success flash must be absent.',
         );
+    }
+
+    public function testContactViewEscapesPrefilledValues(): void
+    {
+        $_SERVER['REQUEST_URI'] = '/site/contact';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
+        $model = new ContactForm();
+        $model->name = '" autofocus onfocus="alert(1)';
+        $model->body = '<strong>Message</strong>';
+
+        $response = (new PhpViewRenderer())->render('site/contact', ['model' => $model]);
+
+        self::assertStringContainsString(
+            'value="&quot; autofocus onfocus=&quot;alert(1)"',
+            $response,
+            'Input values must be escaped as attributes.',
+        );
+        self::assertStringContainsString(
+            '&lt;strong&gt;Message&lt;/strong&gt;',
+            $response,
+            'Textarea values must be escaped as content.',
+        );
+        self::assertStringNotContainsString('<strong>Message</strong>', $response);
     }
 
     protected function tearDown(): void

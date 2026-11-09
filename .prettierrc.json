@@ -6,7 +6,7 @@
     "printWidth": 80,
     "overrides": [
         {
-            "files": ["**/*.{js,jsx,ts,tsx,vue,css,scss,html,yml,yaml}"],
+            "files": ["**/*.{cjs,css,js,mjs,yml,yaml}"],
             "options": {
                 "tabWidth": 2
             }
@@ -15,13 +15,15 @@
             "files": "**/*.md",
             "options": {
                 "embeddedLanguageFormatting": "off",
+                "printWidth": 120,
+                "proseWrap": "always",
                 "tabWidth": 2
             }
         },
         {
-            "files": ["**/package.json", "**/package-lock.json"],
+            "files": "CHANGELOG.md",
             "options": {
-                "tabWidth": 2
+                "proseWrap": "preserve"
             }
         }
     ]

@@ -6,21 +6,20 @@ namespace app\usecases\user;
 
 use app\usecases\shared\filters\CsrfValidationFilter;
 use app\usecases\shared\view\ViewRendererInterface;
+use Override;
 use Throwable;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\filters\VerbFilter;
 use yii\web\{Action, BadRequestHttpException, Response};
 
 /**
  * Validates a single-use password reset token and persists the new password through {@see ResetPasswordForm}.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class ResetPasswordAction extends Action
 {
     /**
-     * Creates a new instance with the renderer supplied by the active frontend overlay.
+     * Creates a new instance with the configured renderer.
      *
      * @param ViewRendererInterface $view Renderer used to produce the reset-password view.
      */
@@ -30,11 +29,16 @@ final class ResetPasswordAction extends Action
     }
 
     /**
-     * Validates the CSRF token on `POST`.
+     * Restricts the action to form methods and validates the CSRF token on unsafe requests.
      */
+    #[Override]
     public function behaviors(): array
     {
         return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => ['*' => ['GET', 'POST']],
+            ],
             'csrf' => CsrfValidationFilter::class,
         ];
     }

@@ -19,7 +19,6 @@ use yii\symfonymailer\Message;
 /**
  * Unit tests for {@see \app\usecases\user\SignupForm} model.
  *
- * @author Wilmer Arambula <terabytesoftw@gmail.com>
  * @since 0.1
  */
 final class SignupFormTest extends Unit

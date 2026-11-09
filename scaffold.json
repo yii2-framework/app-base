@@ -8,10 +8,15 @@
         "yii",
         "runtime/.gitignore"
     ],
+    "exclude": [
+        "config/test.php",
+        "config/test_db.php",
+        "public/index-test.php"
+    ],
     "modes": {
         "config/*.php": "preserve",
         "rbac/*.php": "preserve",
-        "public/assets/.gitkeep": "preserve",
+        "public/assets/.gitignore": "preserve",
         "public/images/**": "preserve",
         "runtime/.gitignore": "preserve"
     }

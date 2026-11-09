@@ -14,6 +14,16 @@ use yii\web\JsonParser;
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
+if (!is_array($params)) {
+    throw new \InvalidArgumentException("The 'config/params.php' file must return an array.");
+}
+
+$cookieValidationKey = $params['cookieValidationKey'] ?? null;
+
+if (!is_string($cookieValidationKey) || $cookieValidationKey === '') {
+    throw new \InvalidArgumentException("The 'cookieValidationKey' application parameter must be configured.");
+}
+
 $config = [
     'id' => 'app',
     'basePath' => dirname(__DIR__),
@@ -43,8 +53,7 @@ $config = [
         ],
         'mailer' => MailerInterface::class,
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => '',
+            'cookieValidationKey' => $cookieValidationKey,
             'parsers' => [
                 'application/json' => JsonParser::class,
             ],

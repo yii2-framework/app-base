@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\usecases\shared\user;
 
+use Override;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -24,9 +25,6 @@ use yii\web\IdentityInterface;
  * @property int $created_at
  * @property int $updated_at
  * @property string $password write-only password
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -43,6 +41,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public const int STATUS_INACTIVE = 9;
 
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -223,6 +222,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Returns the validation rules for the model attributes.
      */
+    #[Override]
     public function rules(): array
     {
         return [
@@ -254,6 +254,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @return string Name of the database table associated with this ActiveRecord class.
      */
+    #[Override]
     public static function tableName(): string
     {
         return '{{%user}}';
@@ -272,8 +273,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Validates password.
-     *
      * @param string $password Password to be validated.
      *
      * @return bool `true` if the password is valid, `false` otherwise.

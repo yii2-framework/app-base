@@ -10,11 +10,8 @@ use Yii;
  * Default {@see ViewRendererInterface} implementation that resolves PHP view templates under `@app/resources/views`
  * and wraps them in the shared `layouts/main.php` layout.
  *
- * Used by `app-base` out of the box and by the `frontend-jquery` overlay. Frontend overlays based on Inertia bind a
- * different implementation in the DI container.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
+ * Used by `app-base` out of the box. Applications that use another presentation strategy can bind a different
+ * implementation in the DI container.
  */
 final class PhpViewRenderer implements ViewRendererInterface
 {

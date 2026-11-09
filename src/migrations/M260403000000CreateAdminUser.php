@@ -10,9 +10,6 @@ use yii\db\Migration;
 
 /**
  * Seeds the default administrator user.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 class M260403000000CreateAdminUser extends Migration
 {

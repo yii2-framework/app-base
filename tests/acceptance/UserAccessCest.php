@@ -10,23 +10,21 @@ use app\usecases\shared\user\User;
 
 /**
  * Acceptance tests for the user-area access control and verb constraints across standalone action slices.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class UserAccessCest
 {
-    public function _before(AcceptanceTester $I): void
+    /**
+     * @return array{user: array{class: string, dataFile: string}}
+     */
+    public function _fixtures(): array
     {
-        $I->haveFixtures(
-            [
-                'user' => [
-                    'class' => UserFixture::class,
-                    // @phpstan-ignore binaryOp.invalid
-                    'dataFile' => codecept_data_dir() . 'user.php',
-                ],
+        return [
+            'user' => [
+                'class' => UserFixture::class,
+                // @phpstan-ignore binaryOp.invalid
+                'dataFile' => codecept_data_dir() . 'user.php',
             ],
-        );
+        ];
     }
 
     public function authenticatedUserCanReachResetPasswordWithToken(AcceptanceTester $I): void
@@ -110,6 +108,24 @@ final class UserAccessCest
 
         $I->amOnRoute('user/index');
         $I->seeResponseCodeIs(403);
+    }
+
+    public function unsupportedVerbIsRejectedOnContact(AcceptanceTester $I): void
+    {
+        $I->sendAjaxRequest('PUT', '/site/contact');
+        $I->seeResponseCodeIs(405);
+    }
+
+    public function unsupportedVerbIsRejectedOnGuestForm(AcceptanceTester $I): void
+    {
+        $I->sendAjaxRequest('PUT', '/user/login');
+        $I->seeResponseCodeIs(405);
+    }
+
+    public function unsupportedVerbIsRejectedOnResetPassword(AcceptanceTester $I): void
+    {
+        $I->sendAjaxRequest('PUT', '/user/reset-password?token=unused');
+        $I->seeResponseCodeIs(405);
     }
 
     /**

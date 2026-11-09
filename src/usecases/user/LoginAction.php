@@ -11,17 +11,14 @@ use yii\web\{Action, Response};
 
 /**
  * Authenticates the user against {@see LoginForm}: on success redirects to the stored return URL; on validation failure
- * stores errors as a flash and re-renders the login view through the frontend overlay.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
+ * stores errors as a flash and re-renders the login view through the configured renderer.
  */
 final class LoginAction extends Action
 {
     use GuestOnlyActionBehaviors;
 
     /**
-     * Creates a new instance with the renderer supplied by the active frontend overlay.
+     * Creates a new instance with the configured renderer.
      *
      * @param ViewRendererInterface $view Renderer used to produce the login view.
      */

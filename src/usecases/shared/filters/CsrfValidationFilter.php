@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\usecases\shared\filters;
 
+use Override;
 use Yii;
 use yii\base\ActionFilter;
 use yii\web\BadRequestHttpException;
@@ -18,19 +19,6 @@ use yii\web\BadRequestHttpException;
  *
  * Enforcement applies only to unsafe HTTP methods and only when {@see \yii\web\Request::$enableCsrfValidation} is on;
  * {@see \yii\web\Request::validateCsrfToken()} returns `true` for GET, HEAD, and OPTIONS.
- *
- * Usage example:
- * ```php
- * public function behaviors(): array
- * {
- *     return [
- *         'csrf' => \app\usecases\shared\filters\CsrfValidationFilter::class,
- *     ];
- * }
- * ```
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class CsrfValidationFilter extends ActionFilter
 {
@@ -43,6 +31,7 @@ final class CsrfValidationFilter extends ActionFilter
      *
      * @return bool `true` when the token is valid or validation does not apply.
      */
+    #[Override]
     public function beforeAction($action): bool
     {
         if (Yii::$app->getRequest()->validateCsrfToken() === false) {

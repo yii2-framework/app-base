@@ -2,7 +2,13 @@
 
 declare(strict_types=1);
 
-// note: make sure this file is not accessible when deployed to production.
+$environment = getenv('YII_ENV');
+
+if ($environment !== 'test') {
+    http_response_code(404);
+    exit('Not Found');
+}
+
 $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
 
 if (!in_array($clientIp, ['127.0.0.1', '::1'], true)) {

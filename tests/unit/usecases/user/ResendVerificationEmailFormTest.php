@@ -19,9 +19,6 @@ use yii\symfonymailer\Message;
 
 /**
  * Unit tests for {@see \app\usecases\user\ResendVerificationEmailForm} model.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class ResendVerificationEmailFormTest extends Unit
 {

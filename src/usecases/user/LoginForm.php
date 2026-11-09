@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\usecases\user;
 
 use app\usecases\shared\user\User;
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -12,9 +13,6 @@ use yii\base\Model;
  * Represents the login form with username/password authentication.
  *
  * @property User|null $user
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 class LoginForm extends Model
 {
@@ -82,6 +80,7 @@ class LoginForm extends Model
     /**
      * Returns the validation rules for the form attributes.
      */
+    #[Override]
     public function rules(): array
     {
         return [

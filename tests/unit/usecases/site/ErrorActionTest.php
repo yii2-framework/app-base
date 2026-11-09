@@ -13,9 +13,6 @@ use yii\web\HttpException;
 
 /**
  * Unit tests for {@see ErrorAction} exception rendering, status mapping, and message filtering.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class ErrorActionTest extends Unit
 {
@@ -94,7 +91,7 @@ final class ErrorActionTest extends Unit
         $_SERVER['REQUEST_URI'] = '/site/error';
         $_SERVER['SERVER_NAME'] = 'localhost';
 
-        Yii::$app->errorHandler->exception = new HttpException(404, 'Page not found');
+        Yii::$app->errorHandler->exception = new HttpException(404, 'Page <strong>not found</strong>');
 
         $action = new ErrorAction(new PhpViewRenderer());
 
@@ -110,9 +107,14 @@ final class ErrorActionTest extends Unit
             "Heading must show '404'."
         );
         self::assertStringContainsString(
-            'Page not found',
+            'Page &lt;strong&gt;not found&lt;/strong&gt;',
             $response,
-            'HttpException message must render verbatim.'
+            'HttpException message must be escaped before rendering.'
+        );
+        self::assertStringNotContainsString(
+            '<strong>not found</strong>',
+            $response,
+            'HttpException message must not cross the raw HTML boundary.'
         );
         self::assertStringNotContainsString(
             'An internal server error occurred.',

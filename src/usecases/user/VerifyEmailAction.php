@@ -6,6 +6,7 @@ namespace app\usecases\user;
 
 use app\usecases\shared\user\VerifyEmailForm;
 use app\usecases\shared\view\ViewRendererInterface;
+use Override;
 use yii\base\InvalidArgumentException;
 use yii\filters\VerbFilter;
 use yii\web\{Action, BadRequestHttpException, Response};
@@ -16,14 +17,11 @@ use yii\web\{Action, BadRequestHttpException, Response};
  * Performs only token validation; the actual verification is committed by the `user/confirm-email` slice on POST, so
  * that single-use tokens are not silently consumed by email link scanners (Outlook SafeLinks, antivirus, browser
  * prefetch) before the recipient clicks.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class VerifyEmailAction extends Action
 {
     /**
-     * Creates a new instance with the renderer supplied by the active frontend overlay.
+     * Creates a new instance with the configured renderer.
      *
      * @param ViewRendererInterface $view Renderer used to produce the verify-email view.
      */
@@ -35,6 +33,7 @@ final class VerifyEmailAction extends Action
     /**
      * Restricts the action to GET requests.
      */
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -52,7 +51,7 @@ final class VerifyEmailAction extends Action
      *
      * @throws BadRequestHttpException if the token is invalid.
      *
-     * @return Response|string Rendered interstitial view, or an `HTTP` response when the overlay sends headers
+     * @return Response|string Rendered interstitial view, or an `HTTP` response when the renderer sends headers
      * directly.
      */
     public function run(string $token): Response|string

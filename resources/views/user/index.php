@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use app\usecases\user\UserSearch;
+use UIAwesome\Html\Heading\H1;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
-use yii\helpers\Html;
 use yii\web\View;
 
 /**
@@ -15,7 +15,7 @@ use yii\web\View;
  */
 $this->title = 'Users';
 ?>
-<h1><?= Html::encode($this->title) ?></h1>
+<?= H1::tag()->content($this->title)->render() ?>
 <?= GridView::widget(
     [
         'dataProvider' => $dataProvider,

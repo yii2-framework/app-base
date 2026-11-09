@@ -11,21 +11,18 @@ use yii\base\{Exception, UserException};
 use yii\web\{Action, HttpException, NotFoundHttpException, Response};
 
 /**
- * Renders captured exceptions through the frontend overlay's {@see ViewRendererInterface}.
+ * Renders captured exceptions through the configured {@see ViewRendererInterface}.
  *
  * Replaces {@see \yii\web\ErrorAction}, which requires a hosting controller and is therefore not standalone-compatible.
  *
  * Synthesizes a {@see NotFoundHttpException} when the error handler captured nothing, sets the HTTP status code from
  * the exception, exposes only {@see UserException} messages to the user (other throwables fall back to a generic
  * message to avoid leaking internals), and returns a plain-text body for AJAX requests.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class ErrorAction extends Action
 {
     /**
-     * Creates a new instance with the renderer supplied by the active frontend overlay.
+     * Creates a new instance with the configured renderer.
      *
      * @param ViewRendererInterface $view Renderer used to produce the error page.
      */

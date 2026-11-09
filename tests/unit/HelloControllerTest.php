@@ -15,7 +15,6 @@ use yii\console\{Application, Exception, ExitCode};
  * Uses {@see HelloControllerSpy} to capture `stdout()` writes (Yii2's `Controller::stdout()` goes straight to the
  * `STDOUT` stream, bypassing PHPUnit / Codeception output buffering).
  *
- * @author Wilmer Arambula <terabytesoftw@gmail.com>
  * @since 0.1
  */
 final class HelloControllerTest extends Unit

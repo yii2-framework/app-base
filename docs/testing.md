@@ -1,136 +1,126 @@
-# Testing
+# Testing and quality
 
-This package contains a PHP test suite and supporting tooling for static analysis, dependency hygiene, and coding
-standards.
+The repository validates behavior, types, coding standards, dependency declarations, and Composer metadata.
 
-## Automated refactoring and coding standards
-
-Run Rector:
+Install development dependencies before running these commands:
 
 ```bash
-composer rector
+composer install
+vendor/bin/codecept build
 ```
 
-## Codeception
+## Test suites
 
-Run the Codeception suites (unit + functional + acceptance):
+Run all Codeception suites:
 
 ```bash
 composer tests
 ```
 
-### Suite layout
+The repository contains:
 
 ```text
 tests/
-├── _bootstrap.php              # boots a console app and runs migrations on the test DB once
-├── _phpstan_bootstrap.php      # PHPStan-only bootstrap
-├── codeception.yml             # global suite config (coverage enabled for /src/*)
-├── acceptance.suite.yml
-├── functional.suite.yml
-├── unit.suite.yml
-├── acceptance/
-│   └── UserAccessCest.php      # exercises AccessControl + VerbFilter via the full request pipeline
+├── acceptance/              Request-pipeline access and verb checks
+├── functional/              Integration suite reserved for application scenarios
 ├── unit/
-│   ├── HelloControllerTest.php
-│   ├── LoginTest.php
-│   ├── LogoutTest.php
-│   ├── SiteControllerTest.php
-│   ├── UserControllerTest.php
-│   ├── migrations/
-│   │   ├── CreateAdminUserTest.php
-│   │   └── CreateUserTableTest.php
-│   └── models/                 # one test class per model/form
+│   ├── migrations/          Schema and administrator seed tests
+│   ├── scaffold/            Provider manifest contract tests
+│   └── usecases/            Actions, forms, user model, filters, and view adapters
 └── support/
-    ├── AcceptanceTester.php
-    ├── FunctionalTester.php
-    ├── MailerBootstrap.php     # captures outgoing mail in tests
-    ├── UnitTester.php
-    ├── data/
-    │   ├── login_data.php
-    │   ├── test.sqlite
-    │   └── user.php            # UserFixture dataset
-    └── fixtures/
-        └── UserFixture.php
+    ├── data/                SQLite database and fixtures
+    ├── fixtures/            Yii fixture definitions
+    ├── spies/               Test doubles requiring application inheritance
+    └── MailerBootstrap.php  Shared mailer binding for test assertions
 ```
 
-### Suite responsibilities
+`tests/_bootstrap.php` prepares the test application and migrations. `config/test.php` uses the isolated SQLite database
+in `tests/support/data/test.sqlite`, disables CSRF for test requests, and captures outgoing mail.
 
-| Suite        | Purpose                                                                                                                      |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| `unit`       | Tests single classes in isolation (controllers, models, forms, migrations) by instantiating objects directly.                |
-| `functional` | Reserved for integration-style tests that emulate a request (currently empty; left wired for future additions).              |
-| `acceptance` | Dispatches through the full Yii2 request pipeline so controller `behaviors()` (`AccessControl`, `VerbFilter`) actually fire. |
-
-### Test database
-
-`tests/_bootstrap.php` boots a temporary Yii console application, wires the `MigrateController` against
-`config/test_db.php`, and runs every migration once before the first test executes. The connection is SQLite at
-`tests/support/data/test.sqlite`. Migrations are not reset between tests; fixtures roll back via the `Yii2` Codeception
-module.
-
-### Mail capture
-
-Outgoing mail in tests is configured in `config/test.php` (`yii\symfonymailer\Mailer` with `useFileTransport: true`).
-`app\tests\support\MailerBootstrap` ensures `MailerInterface` resolves to that same app mailer instance through the DI
-container. Tests assert on the produced files in `runtime/mail/` via the Codeception `Filesystem` module.
-
-### Turnstile
-
-`ContactFormValidateTurnstileTest` exercises the Cloudflare Turnstile integration. `config/test.php` sets
-`turnstile.secretKey` to the empty string so the full validator is bypassed in the rest of the suite; the dedicated
-test reinstates the key and stubs the HTTP response.
-
-### Coverage
-
-Codeception's coverage is enabled for `/src/*`. Reports are written under `tests/support/output/coverage/` (HTML) and
-`tests/support/output/coverage.txt` (text). The suite holds **100% line and method coverage** across controllers,
-models, forms, and migrations.
-
-## Coding standards
-
-Run Easy Coding Standard with fixes (PER-3 + PSR-12, configured via `ecs.php` which extends `php-forge/coding-standard`):
+Forward a suite or test path after Composer's `--` separator:
 
 ```bash
-composer ecs
+composer tests -- unit
+composer tests -- unit tests/unit/usecases/user/LoginFormTest.php
+composer tests -- acceptance
 ```
 
-## Dependency definition check
+## Coverage
 
-Verify that every symbol referenced from `src/` is declared by a runtime dependency. The whitelist for runtime-defined
-Yii constants (`YII_DEBUG`, `YII_ENV_TEST`) lives in `composer-require-checker.json`:
+Codeception includes `src/` in coverage collection. Generate text, XML, or HTML output only in an environment with a
+supported coverage driver:
 
 ```bash
-composer check-dependencies
+composer tests -- --coverage --coverage-text --coverage-xml --coverage-html
 ```
+
+Generated reports are stored under `tests/support/output/` and are not documentation of a permanent coverage percentage.
+Review the current CI report when making coverage decisions.
 
 ## Static analysis
 
-Run PHPStan at `level: max` with the strict-rules extension and bleeding-edge ruleset enabled (`checkImplicitMixed`,
-`checkBenevolentUnionTypes`, `checkUninitializedProperties`, ...). Configuration lives in `phpstan.neon`; the Yii2
-extension picks up its app config from `tests/support/phpstan-config.php`:
+Run PHPStan at the repository's configured maximum level and strict rules:
 
 ```bash
 composer static
 ```
 
-## Passing extra arguments
+Configuration is in `phpstan.neon`; the Yii application bootstrap used by analysis is
+`tests/support/phpstan-config.php`.
 
-Composer scripts support forwarding additional arguments using `--`.
+## Coding standards and automated refactoring
 
-Examples:
+Apply the configured PER 3.0 and PSR-12 rules:
 
 ```bash
-composer tests -- run unit                                          # only the unit suite
-composer tests -- run unit tests/unit/models/LoginFormTest.php      # a single test file
-composer tests -- run acceptance                                    # only the acceptance suite
-composer static -- --memory-limit=512M                              # raise the PHPStan memory limit
-composer ecs -- --no-progress-bar                                   # quieter ECS output
+composer ecs
 ```
+
+Apply Rector rules:
+
+```bash
+composer rector
+```
+
+Generated Codeception actors are excluded from both tools. To inspect Rector without writing files:
+
+```bash
+vendor/bin/rector process --dry-run
+```
+
+## Dependency and metadata checks
+
+```bash
+composer validate --strict
+composer check-platform-reqs
+composer check-dependencies
+composer audit
+composer outdated --direct
+composer licenses
+```
+
+`composer check-dependencies` verifies that external symbols referenced by `src/` have corresponding runtime
+requirements. See [dependencies.md](dependencies.md) for the dependency policy and compatibility pin rationale.
+
+## Recommended local sequence
+
+```bash
+composer validate --strict
+composer check-platform-reqs
+composer check-dependencies
+composer static
+vendor/bin/rector process --dry-run
+composer ecs
+composer tests
+git diff --check
+```
+
+Because `composer ecs` and `composer rector` write changes, review the working tree after running them.
 
 ## Next steps
 
-- 📚 [Installation Guide](installation.md)
-- 📦 [Scaffold Workflow](scaffold.md)
-- ⚙️ [Configuration Reference](configuration.md)
-- 🎨 [Frontend Overlays](frontend-overlays.md)
+- [Installation guide](installation.md)
+- [Configuration reference](configuration.md)
+- [Scaffold workflow](scaffold.md)
+- [Presentation customization](frontend-overlays.md)
+- [Dependency policy](dependencies.md)

@@ -14,9 +14,6 @@ use yii\web\Response;
 
 /**
  * Unit tests for {@see LoginAction} authentication and guest-only access guard.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class LoginActionTest extends Unit
 {
@@ -48,6 +45,22 @@ final class LoginActionTest extends Unit
             $response,
             'GET must render the form.',
         );
+        self::assertIsString(
+            $response,
+            'GET must render the form as a string.',
+        );
+        self::assertStringContainsString('method="post"', $response);
+        self::assertStringContainsString('name="LoginForm[username]"', $response);
+        self::assertStringContainsString('id="loginform-password"', $response);
+        self::assertStringContainsString('type="password"', $response);
+        self::assertMatchesRegularExpression(
+            '/<input(?=[^>]*name="LoginForm\[rememberMe\]")(?=[^>]*type="hidden")(?=[^>]*value="0")[^>]*>/',
+            $response,
+            'Unchecked checkbox companion must submit zero regardless of attribute order.',
+        );
+        self::assertStringContainsString('type="checkbox"', $response);
+        self::assertStringContainsString('user/request-password-reset', $response);
+        self::assertStringContainsString('user/resend-verification-email', $response);
     }
 
     public function testActionLoginPostSuccess(): void

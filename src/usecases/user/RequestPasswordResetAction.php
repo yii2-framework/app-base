@@ -13,9 +13,6 @@ use yii\web\{Action, Response};
 /**
  * Validates {@see PasswordResetRequestForm} and dispatches the reset link through the configured
  * {@see MailerInterface}.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class RequestPasswordResetAction extends Action
 {

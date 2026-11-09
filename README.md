@@ -6,57 +6,54 @@
         <img src="https://www.yiiframework.com/image/design/logo/yii3_full_for_light.svg" alt="Yii Framework" width="80%">
     </picture>
     <h1 align="center">App Base</h1>
-    <br>
 </p>
 <!-- markdownlint-enable MD041 -->
 
 <p align="center">
-    <a href="https://github.com/yii2-extensions/app-base/actions/workflows/build.yml" target="_blank">
-        <img src="https://img.shields.io/github/actions/workflow/status/yii2-extensions/app-base/build.yml?style=for-the-badge&logo=github&label=Build" alt="Build">
+    <a href="https://github.com/yii2-framework/app-base/actions/workflows/build.yml">
+        <img src="https://img.shields.io/github/actions/workflow/status/yii2-framework/app-base/build.yml?style=for-the-badge&logo=github&label=Build" alt="Build">
     </a>
-    <a href="https://codecov.io/gh/yii2-extensions/app-base" target="_blank">
-        <img src="https://img.shields.io/codecov/c/github/yii2-extensions/app-base.svg?style=for-the-badge&logo=codecov&logoColor=white&label=Codecov" alt="Codecov">
+    <a href="https://codecov.io/gh/yii2-framework/app-base">
+        <img src="https://img.shields.io/codecov/c/github/yii2-framework/app-base.svg?style=for-the-badge&logo=codecov&logoColor=white&label=Codecov" alt="Codecov">
     </a>
-    <a href="https://github.com/yii2-extensions/app-base/actions/workflows/static.yml" target="_blank">
-        <img src="https://img.shields.io/github/actions/workflow/status/yii2-extensions/app-base/static.yml?style=for-the-badge&logo=github&label=PHPStan" alt="PHPStan">
+    <a href="https://github.com/yii2-framework/app-base/actions/workflows/static.yml">
+        <img src="https://img.shields.io/github/actions/workflow/status/yii2-framework/app-base/static.yml?style=for-the-badge&logo=github&label=PHPStan" alt="PHPStan">
     </a>
 </p>
 
-<p align="center">
-    <strong>Shared Yii2 backend distributed as a <code>yii2-extensions/scaffold</code> provider<br>
-    User model, auth, RBAC, migrations, mail, console, web entrypoints.</strong>
-</p>
-
-## Features
+`yii2-framework/app-base` is a reusable Yii2 application scaffold. It provides standalone web actions, user
+authentication, RBAC configuration, migrations, mail templates, semantic PHP views, console tooling, and secure web
+entry points.
 
 <picture>
     <source media="(max-width: 767px)" srcset="./docs/svgs/features-mobile.svg">
-    <img src="./docs/svgs/features.svg" alt="Feature Overview" style="width: 100%;">
+    <img src="./docs/svgs/features.svg" alt="Feature overview" style="width: 100%;">
 </picture>
 
-## What is a scaffold provider?
+## How it works
 
-`app-base` is not a runtime library; there is no class to extend or service to register.
+This package has Composer type `yii2-scaffold`. The [`php-forge/scaffold`][scaffold] plugin copies the paths declared in
+`scaffold.json` into the consumer project. The resulting files belong to the consumer and can be inspected, customized,
+or ejected from scaffold tracking.
 
-It is a [`yii2-extensions/scaffold`][scaffold] **provider** ; a package that declares a set of files to copy into a
-consumer project.
+The scaffold distinguishes between two modes used by this provider:
 
-On `composer install`, the scaffold plugin reads `scaffold.json` from this package and copies `src/`, `config/`, `rbac/`,
-`resources/`, `public/` and `yii` into the consumer root. Files that are marked as `preserve` (configs, RBAC, runtime
-assets) are only written once, so your edits survive subsequent installs.
+- `replace`: updates an unmodified file and skips a file changed by the consumer.
+- `preserve`: creates a missing file but never overwrites an existing one.
 
-See [docs/scaffold.md](docs/scaffold.md) for the detailed walkthrough.
+See the [scaffold workflow](docs/scaffold.md) for update and ownership commands.
 
 ## Requirements
 
-- PHP `>=8.3`
-- `yiisoft/yii2` `^22.0@dev`
-- `yii2-extensions/scaffold` `^0.1@dev`
-- A frontend overlay provider for views, CSS, and JS ; see [docs/frontend-overlays.md](docs/frontend-overlays.md).
+- PHP `>=8.3`.
+- PHP ctype support, supplied by the extension or a Composer-compatible polyfill.
+- Composer `^2.10`.
+- Yii `^22.0@dev`.
+- Scaffold plugin `^0.3@dev` in the consumer project.
 
 ## Quick start
 
-Create a new directory for your app, drop in this `composer.json`, then run `composer install`:
+Create an empty project directory with this `composer.json`:
 
 ```json
 {
@@ -66,17 +63,18 @@ Create a new directory for your app, drop in this `composer.json`, then run `com
     "prefer-stable": true,
     "require": {
         "php": ">=8.3",
-        "yii2-extensions/app-base": "^22.0@dev",
-        "yii2-extensions/app-jquery": "^22.0@dev"
+        "yii2-framework/app-base": "^0.1@dev",
+        "php-forge/scaffold": "^0.3@dev"
     },
-    "require-dev": {
-        "yii2-extensions/scaffold": "^0.1@dev"
+    "autoload": {
+        "psr-4": {
+            "app\\": "src"
+        }
     },
     "extra": {
         "scaffold": {
             "allowed-packages": [
-                "yii2-extensions/app-base",
-                "yii2-extensions/app-jquery"
+                "yii2-framework/app-base"
             ]
         },
         "yii\\composer\\Installer::postCreateProject": {
@@ -90,13 +88,13 @@ Create a new directory for your app, drop in this `composer.json`, then run `com
         },
         "yii\\composer\\Installer::postInstall": {
             "generateCookieValidationKey": [
-                "config/web.php"
+                "config/params.php"
             ]
         }
     },
     "config": {
         "allow-plugins": {
-            "yii2-extensions/scaffold": true,
+            "php-forge/scaffold": true,
             "yiisoft/yii2-composer": true
         }
     },
@@ -107,82 +105,81 @@ Create a new directory for your app, drop in this `composer.json`, then run `com
         ],
         "post-install-cmd": [
             "yii\\composer\\Installer::postInstall"
+        ],
+        "post-update-cmd": [
+            "yii\\composer\\Installer::postInstall"
         ]
     }
 }
 ```
 
-Then:
+Install, configure the seeded administrator before migration, and start the application:
 
 ```bash
-composer install                                    # scaffold copies the tree in + autogenerates cookieValidationKey
-./yii migrate                                       # creates the user table + admin user
-php -S localhost:8080 -t public public/router.php   # start the dev server
+composer install
+./yii migrate
+php -S localhost:8080 -t public public/router.php
 ```
 
-Full walkthrough: [docs/installation.md](docs/installation.md).
+Open `http://localhost:8080`. The default database is `runtime/db.sqlite`.
 
-## What ships
-
-After `composer install`, the consumer project tree looks like this:
+## What is included
 
 ```text
-your-app/
-├── src/
-│   ├── controllers/       SiteController, UserController
-│   ├── models/            User ActiveRecord + 8 form models + UserSearch
-│   ├── migrations/        CreateUserTable, CreateAdminUser
-│   └── commands/          HelloController (console entry-point example)
-├── config/                [preserve] web.php, console.php, db.php, params.php, test.php, test_db.php
-├── rbac/                  [preserve] items.php, rules.php, assignments.php
-├── resources/
-│   ├── mail/              HTML + text templates (emailVerify, passwordResetToken) + layouts
-│   └── views/             layouts/main, site/*, user/* ; rendered by the frontend overlay
-├── public/                index.php, index-test.php, router.php (built-in server), assets/, images/
-├── runtime/               [preserve] .gitignore (cache, logs, db.sqlite land here)
-├── yii                    Console entry point
-└── scaffold.json          Provider manifest (copy paths, per-file modes)
+src/
+├── commands/                 Console command example
+├── migrations/               User table and administrator seed
+└── usecases/
+    ├── shared/               CSRF filter, user model, and view adapters
+    ├── site/                 Home, about, contact, and error actions
+    └── user/                 Authentication, recovery, and administration actions
+config/                       Web, console, database, and application parameters
+rbac/                         PhpManager roles, rules, and assignments
+resources/
+├── mail/                     HTML and text mail templates
+└── views/                    Complete layouts and site/user PHP views
+public/                       Web entry point, router, images, and asset directory
+runtime/.gitignore            Runtime directory placeholder
+yii                           Console entry point
 ```
 
-`[preserve]` = scaffold writes the file once and never overwrites it on subsequent `composer install` runs. All other
-paths are refreshed from the provider stubs unless you explicitly `scaffold eject` them.
-
-## Not included (by design)
-
-- CSS, JS, widgets, and asset bundles ; owned by frontend overlays such as [`yii2-extensions/app-jquery`][app-jquery].
-- Server configuration (`.htaccess`, `nginx.conf`, `Caddyfile`, `.rr.yaml`); lives in dedicated
-  `yii2-extensions/server-*` providers.
+The bundled views generate semantic HTML through UI Awesome packages. The provider intentionally does not impose a CSS
+framework, JavaScript runtime, or asset build pipeline. See [presentation customization](docs/frontend-overlays.md) for
+styling, view ownership, and alternate renderer options.
 
 ## Documentation
 
-For detailed configuration, scaffold internals, and consumer setup.
+- [Installation guide](docs/installation.md)
+- [Configuration reference](docs/configuration.md)
+- [Scaffold workflow](docs/scaffold.md)
+- [Presentation customization](docs/frontend-overlays.md)
+- [Dependency policy](docs/dependencies.md)
+- [Testing and quality](docs/testing.md)
 
-- 📚 [Installation Guide](docs/installation.md)
-- 📦 [Scaffold Workflow](docs/scaffold.md)
-- ⚙️ [Configuration Reference](docs/configuration.md)
-- 🎨 [Frontend Overlays](docs/frontend-overlays.md)
-- 🧪 [Testing Guide](docs/testing.md)
+## Security before deployment
 
-## Package information
+The default administrator credentials, SQLite database, and file-based mail transport are development conveniences.
+Complete the [production checklist](docs/configuration.md#production-checklist) before exposing a generated application.
 
-[![PHP](https://img.shields.io/badge/%3E%3D8.3-777BB4.svg?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/releases/8.3/en.php)
-[![Yii 22.0.x](https://img.shields.io/badge/22.0.x-0073AA.svg?style=for-the-badge&logo=yii&logoColor=white)](https://github.com/yiisoft/yii2/tree/22.0)
-[![Latest Stable Version](https://img.shields.io/packagist/v/yii2-extensions/app-base.svg?style=for-the-badge&logo=packagist&logoColor=white&label=Stable)](https://packagist.org/packages/yii2-extensions/app-base)
-[![Total Downloads](https://img.shields.io/packagist/dt/yii2-extensions/app-base.svg?style=for-the-badge&logo=composer&logoColor=white&label=Downloads)](https://packagist.org/packages/yii2-extensions/app-base)
+## AI assistance
 
-## Quality code
+AI agents: read the [documentation index](https://yii2-framework.github.io/docs/llms.txt) and fetch the Markdown version
+of a page by appending `index.md` to its URL. The
+[AI agents guide](https://yii2-framework.github.io/docs/project/ai-agents/) covers skill installation, client setup and
+verification.
 
-[![PHPStan Level Max](https://img.shields.io/badge/PHPStan-Level%20Max-4F5D95.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yii2-extensions/app-base/actions/workflows/static.yml)
-[![Super-Linter](https://img.shields.io/github/actions/workflow/status/yii2-extensions/app-base/linter.yml?style=for-the-badge&label=Super-Linter&logo=github)](https://github.com/yii2-extensions/app-base/actions/workflows/linter.yml)
-[![StyleCI](https://img.shields.io/badge/StyleCI-Passed-44CC11.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.styleci.io/repos/1216396624?branch=main)
+🧭 [`yii2-framework` skill](https://yii2-framework.github.io/docs/guide/skills/yii2-framework/): Yii 22.0 application
+conventions.
 
-## Our social networks
+The hosted documentation covers Yii 22.0. If it does not match the installed revision or is unavailable, use the
+[repository guides](#documentation), the source PHPDoc and the [changelog](CHANGELOG.md).
 
-[![Follow on X](https://img.shields.io/badge/-Follow%20on%20X-1DA1F2.svg?style=for-the-badge&logo=x&logoColor=white&labelColor=000000)](https://x.com/Terabytesoftw)
+## Built with AI
+
+[![Built with Codex](https://img.shields.io/badge/Built%20with-Codex-10A37F.svg?style=for-the-badge&logo=openaigym&logoColor=white)](https://openai.com/codex)
 
 ## License
 
-[![License](https://img.shields.io/badge/License-BSD--3--Clause-brightgreen.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=555555)](LICENSE)
+This package is released under the [BSD 3-Clause License](LICENSE).
 
-[app-jquery]: https://github.com/yii2-extensions/app-jquery
-[scaffold]: https://github.com/yii2-extensions/scaffold
+[scaffold]: https://github.com/php-forge/scaffold

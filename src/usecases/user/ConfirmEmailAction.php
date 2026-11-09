@@ -6,6 +6,7 @@ namespace app\usecases\user;
 
 use app\usecases\shared\filters\CsrfValidationFilter;
 use app\usecases\shared\user\VerifyEmailForm;
+use Override;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\filters\VerbFilter;
@@ -16,15 +17,13 @@ use yii\web\{Action, BadRequestHttpException, Response};
  *
  * Performing the actual verification only on `POST` prevents email link scanners (Outlook SafeLinks, antivirus, browser
  * prefetch) from silently consuming the single-use token before the recipient clicks.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class ConfirmEmailAction extends Action
 {
     /**
      * Restricts the action to POST requests and validates the CSRF token.
      */
+    #[Override]
     public function behaviors(): array
     {
         return [
