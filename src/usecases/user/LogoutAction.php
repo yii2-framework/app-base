@@ -12,9 +12,6 @@ use yii\web\{Action, Response};
 
 /**
  * Terminates the authenticated session and redirects to the home page.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class LogoutAction extends Action
 {

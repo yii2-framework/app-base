@@ -17,9 +17,6 @@ use yii\web\{Action, BadRequestHttpException, Response};
  * Performs only token validation; the actual verification is committed by the `user/confirm-email` slice on POST, so
  * that single-use tokens are not silently consumed by email link scanners (Outlook SafeLinks, antivirus, browser
  * prefetch) before the recipient clicks.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class VerifyEmailAction extends Action
 {

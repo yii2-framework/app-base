@@ -12,9 +12,6 @@ use Yii;
  *
  * Used by `app-base` out of the box. Applications that use another presentation strategy can bind a different
  * implementation in the DI container.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class PhpViewRenderer implements ViewRendererInterface
 {

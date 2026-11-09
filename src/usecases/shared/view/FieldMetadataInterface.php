@@ -9,9 +9,6 @@ namespace app\usecases\shared\view;
  *
  * Yii models already expose labels, hints, values, and validation errors. Implement this interface only when a form
  * also needs control configuration or placeholders transferred to `ui-awesome/html-field`.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 interface FieldMetadataInterface
 {

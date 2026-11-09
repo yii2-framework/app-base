@@ -13,9 +13,6 @@ use yii\web\BadRequestHttpException;
 
 /**
  * Unit tests for {@see VerifyEmailAction} interstitial rendering and token validation.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class VerifyEmailActionTest extends Unit
 {

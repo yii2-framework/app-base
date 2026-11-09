@@ -13,9 +13,6 @@ use yii\base\Model;
  * Represents the login form with username/password authentication.
  *
  * @property User|null $user
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 class LoginForm extends Model
 {

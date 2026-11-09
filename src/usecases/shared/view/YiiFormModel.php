@@ -16,9 +16,6 @@ use function get_debug_type;
  *
  * Values, labels, hints, and validation errors are copied when the adapter is created. The original Yii model remains
  * responsible for request loading and validation; this adapter is intentionally limited to rendering that state.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class YiiFormModel extends BaseFormModel
 {

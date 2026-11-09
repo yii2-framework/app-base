@@ -14,9 +14,6 @@ use yii\mail\{BaseMailer, MailEvent};
 
 /**
  * Unit tests for {@see RequestPasswordResetAction} reset-link dispatch and guest-only access guard.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class RequestPasswordResetActionTest extends Unit
 {

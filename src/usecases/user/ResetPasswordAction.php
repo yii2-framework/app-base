@@ -15,9 +15,6 @@ use yii\web\{Action, BadRequestHttpException, Response};
 
 /**
  * Validates a single-use password reset token and persists the new password through {@see ResetPasswordForm}.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class ResetPasswordAction extends Action
 {

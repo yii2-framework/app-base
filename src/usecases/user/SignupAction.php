@@ -13,9 +13,6 @@ use yii\web\{Action, Response};
 /**
  * Registers a new account through {@see SignupForm} and dispatches the verification email through the configured
  * {@see MailerInterface}.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class SignupAction extends Action
 {

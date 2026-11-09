@@ -10,9 +10,6 @@ use app\usecases\shared\user\User;
 
 /**
  * Acceptance tests for the user-area access control and verb constraints across standalone action slices.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class UserAccessCest
 {
