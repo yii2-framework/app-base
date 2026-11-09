@@ -10,9 +10,6 @@ use Codeception\Test\Unit;
 use Yii;
 use yii\log\Logger;
 
-use function is_array;
-use function is_string;
-
 /**
  * Unit tests for {@see \app\usecases\user\LoginForm} model.
  */
@@ -209,13 +206,7 @@ final class LoginFormTest extends Unit
         $count = 0;
 
         foreach ($logger->messages as $message) {
-            if (!is_array($message)) {
-                continue;
-            }
-
-            $category = $message[2] ?? null;
-
-            if (is_string($category) && str_starts_with($category, 'yii\db\Command::query')) {
+            if (str_starts_with($message[2], 'yii\db\Command::query')) {
                 $count++;
             }
         }

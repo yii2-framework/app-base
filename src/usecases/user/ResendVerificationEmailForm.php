@@ -58,6 +58,7 @@ final class ResendVerificationEmailForm extends Model
 
         if ($cooldown > 0) {
             $cacheKey = 'resend-verification-email:' . sha1(strtolower(trim($this->email)));
+
             $cache = Yii::$app->cache;
 
             if ($cache->add($cacheKey, 1, $cooldown) === false && $cache->exists($cacheKey)) {
@@ -100,7 +101,6 @@ final class ResendVerificationEmailForm extends Model
             }
 
             $transaction->commit();
-            $transaction = null;
         } catch (Throwable $e) {
             if ($transaction !== null && $transaction->isActive) {
                 $transaction->rollBack();

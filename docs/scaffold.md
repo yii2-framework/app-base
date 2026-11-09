@@ -1,7 +1,7 @@
 # Scaffold workflow
 
-The [`yii2-extensions/scaffold`][scaffold] Composer plugin applies this provider to a consumer project and records the
-result in `scaffold-lock.json`.
+The [`php-forge/scaffold`][scaffold] Composer plugin applies this provider to a consumer project and records the result
+in `scaffold-lock.json`.
 
 ## Provider manifest
 
@@ -96,7 +96,7 @@ After ejection, the application owns the file and future provider operations do 
 Use this sequence after changing the provider constraint:
 
 ```bash
-composer update yii2-extensions/app-base yii2-extensions/scaffold --with-dependencies
+composer update yii2-framework/app-base php-forge/scaffold --with-dependencies
 vendor/bin/scaffold status
 ```
 
@@ -116,5 +116,5 @@ remaining application files manually; removing the package does not imply that c
 - [Dependency policy](dependencies.md)
 - [Testing and quality](testing.md)
 
-[modes]: https://github.com/yii2-extensions/scaffold/blob/main/docs/modes.md
-[scaffold]: https://github.com/yii2-extensions/scaffold
+[modes]: https://github.com/php-forge/scaffold/blob/main/docs/modes.md
+[scaffold]: https://github.com/php-forge/scaffold

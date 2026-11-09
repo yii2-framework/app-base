@@ -10,18 +10,18 @@
 <!-- markdownlint-enable MD041 -->
 
 <p align="center">
-    <a href="https://github.com/yii2-extensions/app-base/actions/workflows/build.yml">
-        <img src="https://img.shields.io/github/actions/workflow/status/yii2-extensions/app-base/build.yml?style=for-the-badge&logo=github&label=Build" alt="Build">
+    <a href="https://github.com/yii2-framework/app-base/actions/workflows/build.yml">
+        <img src="https://img.shields.io/github/actions/workflow/status/yii2-framework/app-base/build.yml?style=for-the-badge&logo=github&label=Build" alt="Build">
     </a>
-    <a href="https://codecov.io/gh/yii2-extensions/app-base">
-        <img src="https://img.shields.io/codecov/c/github/yii2-extensions/app-base.svg?style=for-the-badge&logo=codecov&logoColor=white&label=Codecov" alt="Codecov">
+    <a href="https://codecov.io/gh/yii2-framework/app-base">
+        <img src="https://img.shields.io/codecov/c/github/yii2-framework/app-base.svg?style=for-the-badge&logo=codecov&logoColor=white&label=Codecov" alt="Codecov">
     </a>
-    <a href="https://github.com/yii2-extensions/app-base/actions/workflows/static.yml">
-        <img src="https://img.shields.io/github/actions/workflow/status/yii2-extensions/app-base/static.yml?style=for-the-badge&logo=github&label=PHPStan" alt="PHPStan">
+    <a href="https://github.com/yii2-framework/app-base/actions/workflows/static.yml">
+        <img src="https://img.shields.io/github/actions/workflow/status/yii2-framework/app-base/static.yml?style=for-the-badge&logo=github&label=PHPStan" alt="PHPStan">
     </a>
 </p>
 
-`yii2-extensions/app-base` is a reusable Yii2 application scaffold. It provides standalone web actions, user
+`yii2-framework/app-base` is a reusable Yii2 application scaffold. It provides standalone web actions, user
 authentication, RBAC configuration, migrations, mail templates, semantic PHP views, console tooling, and secure web
 entry points.
 
@@ -32,9 +32,9 @@ entry points.
 
 ## How it works
 
-This package has Composer type `yii2-scaffold`. The [`yii2-extensions/scaffold`][scaffold] plugin copies the paths
-declared in `scaffold.json` into the consumer project. The resulting files belong to the consumer and can be inspected,
-customized, or ejected from scaffold tracking.
+This package has Composer type `yii2-scaffold`. The [`php-forge/scaffold`][scaffold] plugin copies the paths declared in
+`scaffold.json` into the consumer project. The resulting files belong to the consumer and can be inspected, customized,
+or ejected from scaffold tracking.
 
 The scaffold distinguishes between two modes used by this provider:
 
@@ -49,7 +49,7 @@ See the [scaffold workflow](docs/scaffold.md) for update and ownership commands.
 - PHP ctype support, supplied by the extension or a Composer-compatible polyfill.
 - Composer `^2.10`.
 - Yii `^22.0@dev`.
-- Scaffold plugin `^0.2` in the consumer project.
+- Scaffold plugin `^0.3@dev` in the consumer project.
 
 ## Quick start
 
@@ -63,8 +63,8 @@ Create an empty project directory with this `composer.json`:
     "prefer-stable": true,
     "require": {
         "php": ">=8.3",
-        "yii2-extensions/app-base": "^0.1@dev",
-        "yii2-extensions/scaffold": "^0.2"
+        "yii2-framework/app-base": "^0.1@dev",
+        "php-forge/scaffold": "^0.3@dev"
     },
     "autoload": {
         "psr-4": {
@@ -74,7 +74,7 @@ Create an empty project directory with this `composer.json`:
     "extra": {
         "scaffold": {
             "allowed-packages": [
-                "yii2-extensions/app-base"
+                "yii2-framework/app-base"
             ]
         },
         "yii\\composer\\Installer::postCreateProject": {
@@ -94,7 +94,7 @@ Create an empty project directory with this `composer.json`:
     },
     "config": {
         "allow-plugins": {
-            "yii2-extensions/scaffold": true,
+            "php-forge/scaffold": true,
             "yiisoft/yii2-composer": true
         }
     },
@@ -104,6 +104,9 @@ Create an empty project directory with this `composer.json`:
             "yii\\composer\\Installer::postInstall"
         ],
         "post-install-cmd": [
+            "yii\\composer\\Installer::postInstall"
+        ],
+        "post-update-cmd": [
             "yii\\composer\\Installer::postInstall"
         ]
     }
@@ -179,4 +182,4 @@ The hosted documentation covers Yii 22.0. If it does not match the installed rev
 
 This package is released under the [BSD 3-Clause License](LICENSE).
 
-[scaffold]: https://github.com/yii2-extensions/scaffold
+[scaffold]: https://github.com/php-forge/scaffold

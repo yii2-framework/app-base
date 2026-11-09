@@ -42,7 +42,7 @@
         <rect class="box-bg" x="20" y="260" width="570" height="100" rx="6"/>
         <rect x="20" y="260" width="4" height="100" fill="#42b883"/>
         <text class="title" x="40" y="290">Scaffold Provider</text>
-        <text class="content" x="40" y="318">Ships via yii2-extensions/scaffold &#8226; Declarative manifest</text>
+        <text class="content" x="40" y="318">Ships via php-forge/scaffold &#8226; Declarative manifest</text>
         <text class="content" x="40" y="338">Per-file modes: preserve for config, rbac, and runtime assets</text>
     </g>
 

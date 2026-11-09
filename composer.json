@@ -27,6 +27,7 @@
         "ui-awesome/html-field": "^0.1",
         "ui-awesome/html-interop": "^0.4",
         "ui-awesome/model": "^0.2",
+        "yii2-extensions/debug": "^0.2",
         "yiisoft/yii2": "^22.0@dev",
         "yiisoft/yii2-symfonymailer": "^4.0|^22.0@dev"
     },
@@ -39,12 +40,11 @@
         "maglnet/composer-require-checker": "~4.17.0",
         "php-forge/baseline": "^0.1@dev",
         "php-forge/coding-standard": "^0.3@dev",
+        "php-forge/scaffold": "^0.3@dev",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.2",
         "phpstan/phpstan-strict-rules": "^2.0.3",
-        "yii2-extensions/debug": "^0.2",
-        "yii2-extensions/phpstan": "^0.5",
-        "php-forge/scaffold": "^0.3@dev"
+        "yii2-extensions/phpstan": "^0.5"
     },
     "autoload": {
         "psr-4": {
@@ -86,7 +86,6 @@
         "allow-plugins": {
             "php-forge/scaffold": true,
             "phpstan/extension-installer": true,
-            "yii2-extensions/scaffold": true,
             "yiisoft/yii2-composer": true
         },
         "sort-packages": true
@@ -99,6 +98,9 @@
             "yii\\composer\\Installer::postInstall"
         ],
         "post-install-cmd": [
+            "yii\\composer\\Installer::postInstall"
+        ],
+        "post-update-cmd": [
             "yii\\composer\\Installer::postInstall"
         ],
         "rector": "./vendor/bin/rector process",

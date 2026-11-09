@@ -1,6 +1,6 @@
 # Installation guide
 
-This guide creates a new Yii2 application from `yii2-extensions/app-base`.
+This guide creates a new Yii2 application from `yii2-framework/app-base`.
 
 ## Requirements
 
@@ -19,14 +19,14 @@ Create an empty directory and add this root package manifest:
 {
     "name": "my-company/my-app",
     "type": "project",
-    "description": "A Yii2 application based on yii2-extensions/app-base.",
+    "description": "A Yii2 application based on yii2-framework/app-base.",
     "license": "proprietary",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=8.3",
-        "yii2-extensions/app-base": "^0.1@dev",
-        "yii2-extensions/scaffold": "^0.2"
+        "yii2-framework/app-base": "^0.1@dev",
+        "php-forge/scaffold": "^0.3@dev"
     },
     "autoload": {
         "psr-4": {
@@ -36,7 +36,7 @@ Create an empty directory and add this root package manifest:
     "extra": {
         "scaffold": {
             "allowed-packages": [
-                "yii2-extensions/app-base"
+                "yii2-framework/app-base"
             ]
         },
         "yii\\composer\\Installer::postCreateProject": {
@@ -56,7 +56,7 @@ Create an empty directory and add this root package manifest:
     },
     "config": {
         "allow-plugins": {
-            "yii2-extensions/scaffold": true,
+            "php-forge/scaffold": true,
             "yiisoft/yii2-composer": true
         }
     },
@@ -66,6 +66,9 @@ Create an empty directory and add this root package manifest:
             "yii\\composer\\Installer::postInstall"
         ],
         "post-install-cmd": [
+            "yii\\composer\\Installer::postInstall"
+        ],
+        "post-update-cmd": [
             "yii\\composer\\Installer::postInstall"
         ]
     }
@@ -78,7 +81,7 @@ Important entries:
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `minimum-stability` and `prefer-stable` | The application and Yii constraints currently resolve development branches while preferring stable transitive packages.                    |
 | `autoload.psr-4.app\\`                  | Loads the scaffolded classes from the root `src/` directory instead of the provider copy under `vendor/`.                                  |
-| `yii2-extensions/scaffold`              | Installs the Composer plugin that applies and tracks provider files. It is a runtime requirement so `--no-dev` installs retain the plugin. |
+| `php-forge/scaffold`                    | Installs the Composer plugin that applies and tracks provider files. It is a runtime requirement so `--no-dev` installs retain the plugin. |
 | `extra.scaffold.allowed-packages`       | Explicitly authorizes this provider to write into the project root.                                                                        |
 | `allow-plugins`                         | Explicitly authorizes the scaffold and Yii Composer plugins.                                                                               |
 | Yii installer callbacks                 | Set initial permissions and generate a non-empty cookie validation key.                                                                    |
@@ -101,6 +104,10 @@ vendor/bin/scaffold status
 
 Commit `composer.lock` and `scaffold-lock.json` in the consumer application. They lock dependency resolution and
 scaffold state independently.
+
+When no lock file exists, `composer install` resolves dependencies through the update lifecycle. The `post-update-cmd`
+callback therefore generates the cookie validation key on the first install; `post-install-cmd` covers later locked
+installs. The callback leaves an existing non-empty key unchanged.
 
 ## 3. Configure the application
 

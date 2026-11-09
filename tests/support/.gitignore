@@ -1,4 +1,7 @@
 _generated
 data/test.sqlite
+data/test.sqlite-journal
+data/test.sqlite-shm
+data/test.sqlite-wal
 output
 *Tester.php

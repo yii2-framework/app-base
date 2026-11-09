@@ -56,3 +56,6 @@ Thumbs.db
 .buildpath
 .project
 .settings
+
+# private maintainer files (if present)
+/internal/

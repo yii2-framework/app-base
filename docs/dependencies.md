@@ -28,7 +28,7 @@ transitive dependency that could disappear from another package's implementation
 | `maglnet/composer-require-checker`                                             | Detects missing direct runtime requirements.                                                                                      |
 | `php-forge/baseline` and `php-forge/coding-standard`                           | Shared repository files, ECS rules, and Rector configuration.                                                                     |
 | PHPStan core, extension installer, strict rules, and `yii2-extensions/phpstan` | Maximum-level static analysis with Yii-aware types.                                                                               |
-| `yii2-extensions/scaffold`                                                     | Develops and validates this provider and exposes the local scaffold CLI. Consumer projects must also require the plugin directly. |
+| `php-forge/scaffold`                                                           | Develops and validates this provider and exposes the local scaffold CLI. Consumer projects must also require the plugin directly. |
 
 `codeception/lib-innerbrowser` is intentionally not declared directly. The repository does not reference its API, and
 `codeception/module-yii2` already supplies it transitively for the test environment.
@@ -37,7 +37,7 @@ transitive dependency that could disappear from another package's implementation
 
 - PHP `>=8.3` is the supported floor and must remain compatible with the CI matrix.
 - Yii currently uses the `^22.0@dev` development line.
-- The scaffold plugin uses the stable `^0.2` manifest and file-mode contract.
+- The scaffold plugin uses the `^0.3@dev` manifest and file-mode contract.
 - `maglnet/composer-require-checker` is intentionally constrained to `~4.17.0`. This is the newest reviewed line that
   preserves the PHP 8.3 floor without adding an `ext-sodium` platform requirement. Reassess the pin when the platform
   matrix changes.

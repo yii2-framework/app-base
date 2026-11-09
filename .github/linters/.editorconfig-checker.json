@@ -18,6 +18,10 @@
         "^tests/runtime/",
         "^vendor/",
         "phpstan-baseline\\.neon$",
-        "scaffold-lock\\.json$"
+        "scaffold-lock\\.json$",
+        "^internal/",
+        "^node_modules/",
+        "^tests/support/_generated/",
+        "^tests/support/output/"
     ]
 }

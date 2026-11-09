@@ -58,14 +58,14 @@ overlapping destinations:
 ```json
 {
     "require": {
-        "yii2-extensions/app-base": "^0.1@dev",
-        "yii2-extensions/scaffold": "^0.2",
+        "yii2-framework/app-base": "^0.1@dev",
+        "php-forge/scaffold": "^0.3@dev",
         "vendor/application-presentation": "^1.0"
     },
     "extra": {
         "scaffold": {
             "allowed-packages": [
-                "yii2-extensions/app-base",
+                "yii2-framework/app-base",
                 "vendor/application-presentation"
             ]
         }
@@ -86,4 +86,4 @@ Consult the [scaffold provider documentation][providers] before publishing an ad
 - [Dependency policy](dependencies.md)
 - [Testing and quality](testing.md)
 
-[providers]: https://github.com/yii2-extensions/scaffold/blob/main/docs/providers.md
+[providers]: https://github.com/php-forge/scaffold/blob/main/docs/providers.md
