@@ -34,6 +34,7 @@ class ContactForm extends Model implements FieldMetadataInterface
      * Message subject.
      */
     public string $subject = '';
+
     /**
      * Sends an email to the specified email address using the information collected by this model.
      *
