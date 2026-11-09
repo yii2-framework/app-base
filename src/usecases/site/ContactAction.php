@@ -6,17 +6,16 @@ namespace app\usecases\site;
 
 use app\usecases\shared\filters\CsrfValidationFilter;
 use app\usecases\shared\view\ViewRendererInterface;
+use Override;
 use Throwable;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\mail\MailerInterface;
 use yii\web\{Action, Response};
 
 /**
  * Handles the contact form: validates input, dispatches the message through the configured {@see MailerInterface},
  * stores user feedback as flash messages, and renders or redirects via {@see ViewRendererInterface}.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class ContactAction extends Action
 {
@@ -28,11 +27,16 @@ final class ContactAction extends Action
     }
 
     /**
-     * Validates the CSRF token on `POST`.
+     * Restricts the action to form methods and validates the CSRF token on unsafe requests.
      */
+    #[Override]
     public function behaviors(): array
     {
         return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => ['*' => ['GET', 'POST']],
+            ],
             'csrf' => CsrfValidationFilter::class,
         ];
     }

@@ -2,64 +2,25 @@
 
 declare(strict_types=1);
 
-use yii\helpers\{Html, Url};
+use UIAwesome\Html\Flow\Main;
+use yii\helpers\Html;
 use yii\web\View;
 
 /**
  * @var string $content Inner view content to render inside the layout.
  * @var View $this View component instance.
  */
-$session = Yii::$app->session;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
-<head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= Html::encode($this->title ?? Yii::$app->name) ?></title>
-    <?php $this->head() ?>
-</head>
-<body>
-<?php $this->beginBody() ?>
-<nav>
-    <a href="<?= Url::to(['/site/home']) ?>"><?= Html::encode(Yii::$app->name) ?></a>
-    <a href="<?= Url::to(['/site/about']) ?>">About</a>
-    <a href="<?= Url::to(['/site/contact']) ?>">Contact</a>
-    <?php if (Yii::$app->user->isGuest) { ?>
-        <a href="<?= Url::to(['/user/signup']) ?>">Sign up</a>
-        <a href="<?= Url::to(['/user/login']) ?>">Login</a>
-    <?php } else { ?>
-        <?php if (Yii::$app->user->can('viewUsers')) { ?>
-            <a href="<?= Url::to(['/user/index']) ?>">Users</a>
-        <?php } ?>
-        <?= Html::beginForm(['/user/logout'], 'post') ?>
-        <?= Html::submitButton('Logout') ?>
-        <?= Html::endForm() ?>
-    <?php } ?>
-</nav>
-<?php foreach (['success', 'error'] as $level) { ?>
-    <?php if ($session->hasFlash($level)) { ?>
-        <div role="alert" class="flash flash-<?= $level ?>">
-            <?= Html::encode((string) $session->getFlash($level)) ?>
-        </div>
-    <?php } ?>
-<?php } ?>
-<?php
-$errorBag = $session->getFlash('errors');
-if (is_array($errorBag) && $errorBag !== []) { ?>
-    <ul role="alert" class="flash flash-errors">
-        <?php foreach ($errorBag as $attribute => $messages) { ?>
-            <?php foreach ((array) $messages as $message) { ?>
-                <li><?= Html::encode((string) $message) ?></li>
-            <?php } ?>
-        <?php } ?>
-    </ul>
-<?php } ?>
-<main>
-    <?= $content ?>
-</main>
-<?php $this->endBody() ?>
-</body>
+<html lang="<?= Html::encode(Yii::$app->language) ?>">
+    <?= $this->render('head') ?>
+    <body>
+        <?php $this->beginBody() ?>
+        <?= $this->render('component/menu') ?>
+        <?= $this->render('component/alerts') ?>
+        <?= Main::tag()->html($content) ?>
+        <?php $this->endBody() ?>
+    </body>
 </html>
 <?php $this->endPage();

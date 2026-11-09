@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\usecases\user;
 
 use app\usecases\shared\user\User;
+use Override;
 use Throwable;
 use Yii;
 use yii\base\Model;
@@ -34,6 +35,7 @@ final class SignupForm extends Model
     /**
      * Returns the validation rules for the form attributes.
      */
+    #[Override]
     public function rules(): array
     {
         return [

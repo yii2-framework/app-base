@@ -11,9 +11,6 @@ use yii\base\{InvalidArgumentException, Model};
  *
  * Shared by the `user/verify-email` interstitial slice and the `user/confirm-email` commit slice, which is why this
  * form lives in the shared user kernel rather than in either slice.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 class VerifyEmailForm extends Model
 {

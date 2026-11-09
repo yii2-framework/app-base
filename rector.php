@@ -7,10 +7,18 @@ use Rector\Config\RectorConfig;
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->import(__DIR__ . '/vendor/php-forge/coding-standard/src/rector-83.php');
 
+    $rectorConfig->importNames();
+
     $rectorConfig->paths(
         [
             __DIR__ . '/src',
             __DIR__ . '/tests',
+        ],
+    );
+
+    $rectorConfig->skip(
+        [
+            __DIR__ . '/tests/support/_generated',
         ],
     );
 };

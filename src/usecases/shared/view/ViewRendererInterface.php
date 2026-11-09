@@ -9,11 +9,10 @@ use yii\web\Response;
 /**
  * Renders a named view into a string body or an HTTP response.
  *
- * Decouples per-feature standalone actions in `app\usecases` from the presentation strategy of the consuming frontend
- * overlay (PHP views for jQuery; Inertia for Vue/React). Each overlay binds its own implementation in the DI container
- * under `app\usecases\shared\view\ViewRendererInterface`, so actions remain agnostic to how the view is produced.
+ * Decouples standalone actions in `app\usecases` from the application's presentation strategy. Applications can bind
+ * another implementation in the DI container, so actions remain agnostic to how the view is produced.
  *
- * View names are route-qualified (`site/about`, `user/login`) so overlays can map them deterministically without
+ * View names are route-qualified (`site/about`, `user/login`) so renderers can map them deterministically without
  * inspecting the calling action.
  *
  * @copyright Copyright (C) 2026 Terabytesoftw.
@@ -27,7 +26,7 @@ interface ViewRendererInterface
      * @param string $view Route-qualified view name (for example, `site/about`, `user/login`).
      * @param array<string, mixed> $params Data to expose to the view layer.
      *
-     * @return Response|string Rendered body, or an `HTTP` response when the overlay needs to send headers directly.
+     * @return Response|string Rendered body, or an `HTTP` response when the renderer needs to send headers directly.
      */
     public function render(string $view, array $params = []): Response|string;
 }

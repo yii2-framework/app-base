@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace app\usecases\user;
 
 use app\usecases\shared\view\ViewRendererInterface;
+use Override;
 use Yii;
 use yii\filters\{AccessControl, VerbFilter};
 use yii\web\{Action, Response};
 
 /**
  * Lists users through {@see UserSearch}, exposing the resulting {@see ActiveDataProvider} and search model to the
- * frontend overlay's renderer.
+ * configured renderer.
  *
  * @copyright Copyright (C) 2026 Terabytesoftw.
  * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
@@ -19,7 +20,7 @@ use yii\web\{Action, Response};
 final class IndexAction extends Action
 {
     /**
-     * Creates a new instance with the renderer supplied by the active frontend overlay.
+     * Creates a new instance with the configured renderer.
      *
      * @param ViewRendererInterface $view Renderer used to produce the user list view.
      */
@@ -31,6 +32,7 @@ final class IndexAction extends Action
     /**
      * Restricts the action to the admin role and to GET requests.
      */
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -48,7 +50,7 @@ final class IndexAction extends Action
     /**
      * Renders the paginated, filterable user list.
      *
-     * @return Response|string Rendered user list view, or an HTTP response when the overlay sends headers directly.
+     * @return Response|string Rendered user list view, or an HTTP response when the renderer sends headers directly.
      */
     public function run(): Response|string
     {

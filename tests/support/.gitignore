@@ -1,3 +1,4 @@
 _generated
+data/test.sqlite
 output
 *Tester.php

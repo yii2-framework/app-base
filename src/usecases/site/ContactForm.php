@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace app\usecases\site;
 
-use Throwable;
-use Yii;
-use yii\base\{InvalidArgumentException, Model};
-use yii\helpers\Json;
+use app\usecases\shared\view\FieldMetadataInterface;
+use Override;
+use yii\base\Model;
 use yii\mail\MailerInterface;
 
 /**
- * Represents the contact form with phone validation, Turnstile CAPTCHA, and email sending.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
+ * Represents the contact form with phone validation and email sending.
  */
-class ContactForm extends Model
+class ContactForm extends Model implements FieldMetadataInterface
 {
     /**
      * Message body submitted by the user.
@@ -38,23 +34,6 @@ class ContactForm extends Model
      * Message subject.
      */
     public string $subject = '';
-    /**
-     * Cloudflare Turnstile CAPTCHA token submitted by the client.
-     */
-    public string $turnstileToken = '';
-
-    /**
-     * Returns the attribute labels for form fields.
-     *
-     * @return array<string, string> Attribute labels for the model properties.
-     */
-    public function attributeLabels(): array
-    {
-        return [
-            'turnstileToken' => 'CAPTCHA verification',
-        ];
-    }
-
     /**
      * Sends an email to the specified email address using the information collected by this model.
      *
@@ -82,14 +61,29 @@ class ContactForm extends Model
         return false;
     }
 
+    public function getFieldConfigs(): array
+    {
+        return [
+            'body' => ['rows' => [6]],
+        ];
+    }
+
+    public function getPlaceholders(): array
+    {
+        return [
+            'phone' => '(999) 999-9999',
+        ];
+    }
+
     /**
      * Returns the validation rules for the form attributes.
      */
+    #[Override]
     public function rules(): array
     {
         return [
             [
-                ['name', 'email', 'phone', 'subject', 'body', 'turnstileToken'],
+                ['name', 'email', 'phone', 'subject', 'body'],
                 'required',
             ],
             [
@@ -102,118 +96,6 @@ class ContactForm extends Model
                 'pattern' => '/^\(\d{3}\) \d{3}-\d{4}$/',
                 'message' => 'Phone number must match (999) 999-9999 format.',
             ],
-            [
-                'turnstileToken',
-                'validateTurnstile',
-            ],
         ];
-    }
-
-    /**
-     * Validates the Turnstile CAPTCHA token via the Cloudflare API.
-     *
-     * Inline validator for the `turnstileToken` attribute.
-     *
-     * @param string $attribute Attribute currently being validated.
-     * @param mixed $params Validator parameters configured in {@see rules()}.
-     */
-    public function validateTurnstile(string $attribute, mixed $params): void
-    {
-        if ($this->hasErrors()) {
-            return;
-        }
-
-        $secretKey = Yii::$app->params['turnstile.secretKey'];
-
-        if ($secretKey === '') {
-            if (YII_ENV_TEST) {
-                return;
-            }
-
-            // @codeCoverageIgnoreStart
-            Yii::error(
-                'Turnstile secret key is not configured.',
-                __METHOD__,
-            );
-
-            $this->addError($attribute, 'CAPTCHA verification is temporarily unavailable.');
-
-            return;
-            // @codeCoverageIgnoreEnd
-        }
-
-        $response = $this->fetchTurnstileResponse($secretKey);
-
-        if ($response === null) {
-            $this->addError($attribute, 'CAPTCHA verification failed. Please try again.');
-
-            return;
-        }
-
-        try {
-            /** @var array<string, mixed> $result */
-            $result = Json::decode($response);
-        } catch (InvalidArgumentException) {
-            Yii::warning(
-                'Turnstile response is not valid JSON.',
-                __METHOD__,
-            );
-
-            $this->addError($attribute, 'CAPTCHA verification failed. Please try again.');
-
-            return;
-        }
-
-        if (($result['success'] ?? false) !== true) {
-            $this->addError($attribute, 'CAPTCHA verification failed. Please try again.');
-        }
-    }
-
-    /**
-     * Sends the token to the Cloudflare Turnstile API for verification.
-     *
-     * @param string $secretKey Cloudflare Turnstile secret key used to authenticate the request.
-     *
-     * @return string|null API response body, or `null` on failure.
-     */
-    protected function fetchTurnstileResponse(string $secretKey): string|null
-    {
-        try {
-            $response = file_get_contents(
-                'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-                false,
-                stream_context_create([
-                    'http' => [
-                        'method' => 'POST',
-                        'header' => 'Content-Type: application/x-www-form-urlencoded',
-                        'timeout' => 5,
-                        'content' => http_build_query(
-                            [
-                                'secret' => $secretKey,
-                                'response' => $this->turnstileToken,
-                            ],
-                        ),
-                    ],
-                ]),
-            );
-        } catch (Throwable $exception) { // @codeCoverageIgnoreStart
-            Yii::warning(
-                sprintf('Turnstile verification request failed: %s', $exception->getMessage()),
-                __METHOD__,
-            );
-
-            return null;
-        } // @codeCoverageIgnoreEnd
-
-        if ($response === false) { // @codeCoverageIgnoreStart
-            Yii::warning(
-                'Turnstile verification request failed.',
-                __METHOD__,
-            );
-
-            return null;
-        } // @codeCoverageIgnoreEnd
-
-        return $response;
     }
 }

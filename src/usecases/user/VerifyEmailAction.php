@@ -6,6 +6,7 @@ namespace app\usecases\user;
 
 use app\usecases\shared\user\VerifyEmailForm;
 use app\usecases\shared\view\ViewRendererInterface;
+use Override;
 use yii\base\InvalidArgumentException;
 use yii\filters\VerbFilter;
 use yii\web\{Action, BadRequestHttpException, Response};
@@ -23,7 +24,7 @@ use yii\web\{Action, BadRequestHttpException, Response};
 final class VerifyEmailAction extends Action
 {
     /**
-     * Creates a new instance with the renderer supplied by the active frontend overlay.
+     * Creates a new instance with the configured renderer.
      *
      * @param ViewRendererInterface $view Renderer used to produce the verify-email view.
      */
@@ -35,6 +36,7 @@ final class VerifyEmailAction extends Action
     /**
      * Restricts the action to GET requests.
      */
+    #[Override]
     public function behaviors(): array
     {
         return [
@@ -52,7 +54,7 @@ final class VerifyEmailAction extends Action
      *
      * @throws BadRequestHttpException if the token is invalid.
      *
-     * @return Response|string Rendered interstitial view, or an `HTTP` response when the overlay sends headers
+     * @return Response|string Rendered interstitial view, or an `HTTP` response when the renderer sends headers
      * directly.
      */
     public function run(string $token): Response|string

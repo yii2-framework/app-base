@@ -1,11 +1,11 @@
 # Configuration reference
 
-Every file listed here is shipped with `mode: preserve` (see [scaffold.md](scaffold.md)), so edits are safe: scaffold
-will not overwrite them on subsequent `composer install` runs.
+All configuration and RBAC files copied to consumers use scaffold `preserve` mode. They are created when missing and are
+not overwritten by later provider updates.
 
-## `config/db.php`
+## Database configuration
 
-Defaults to SQLite at `runtime/db.sqlite`:
+`config/db.php` defaults to SQLite:
 
 ```php
 return [
@@ -14,110 +14,100 @@ return [
 ];
 ```
 
-Switch to MySQL, PostgreSQL, or any other driver supported by Yii2 by editing the `dsn`, `username`, and `password`
-keys. The same connection is reused by `config/console.php`, so migrations automatically target the configured database.
+Configure the `dsn`, credentials, and driver options required by the target database. Both the web and console
+applications use this file, so migrations and web requests share the same connection.
 
-## `config/test_db.php`
+The provider-only `config/test_db.php` uses a separate SQLite database at `tests/support/data/test.sqlite`.
 
-Test-only connection, defaults to a separate SQLite file at `tests/support/data/test.sqlite`:
+## Application parameters
 
-```php
-return [
-    'class' => \yii\db\Connection::class,
-    'dsn' => 'sqlite:' . dirname(__DIR__) . '/tests/support/data/test.sqlite',
-];
-```
+`config/params.php` is loaded by the web and console applications.
 
-## `config/params.php`
+| Key                                    | Default                  | Purpose                                                                         |
+| -------------------------------------- | ------------------------ | ------------------------------------------------------------------------------- |
+| `admin.email`                          | `admin@example.com`      | Email used by the administrator seed migration.                                 |
+| `admin.password`                       | `admin`                  | Password used by the administrator seed migration. Replace it before migration. |
+| `admin.username`                       | `admin`                  | Username used by the administrator seed migration.                              |
+| `adminEmail`                           | `admin@example.com`      | Recipient for contact messages.                                                 |
+| `cookieValidationKey`                  | Generated during install | Secret used to sign request cookies. `config/web.php` rejects an empty value.   |
+| `senderEmail`                          | `noreply@example.com`    | Sender address for application mail.                                            |
+| `senderName`                           | `Example.com mailer`     | Sender display name for application mail.                                       |
+| `supportEmail`                         | `support@example.com`    | Support address used by account workflows.                                      |
+| `user.emailVerificationTokenExpire`    | `86400`                  | Verification-token lifetime in seconds.                                         |
+| `user.passwordMinLength`               | `8`                      | Minimum password length for signup and password reset.                          |
+| `user.passwordResetTokenExpire`        | `3600`                   | Password-reset-token lifetime in seconds.                                       |
+| `user.resendVerificationEmailCooldown` | `60`                     | Delay between verification-email resend requests, in seconds.                   |
 
-Application parameters are read from `params.php` by both `web.php` and `console.php`.
+## Web application
 
-| Key                                    | Default               | Purpose                                                                 |
-| -------------------------------------- | --------------------- | ----------------------------------------------------------------------- |
-| `admin.email`                          | `admin@example.com`   | Seed admin email (used by `CreateAdminUser` migration).                 |
-| `admin.password`                       | `admin`               | Seed admin password. **Change before going to production.**             |
-| `admin.username`                       | `admin`               | Seed admin username.                                                    |
-| `adminEmail`                           | `admin@example.com`   | Contact form recipient.                                                 |
-| `senderEmail`                          | `noreply@example.com` | `From:` address on outgoing mail (verify, reset).                       |
-| `senderName`                           | `Example.com mailer`  | `From:` name on outgoing mail.                                          |
-| `supportEmail`                         | `support@example.com` | Rendered in the footer and on error pages.                              |
-| `turnstile.secretKey`                  | Cloudflare test key   | Cloudflare Turnstile server-side secret.                                |
-| `turnstile.siteKey`                    | Cloudflare test key   | Cloudflare Turnstile client-side site key.                              |
-| `user.emailVerificationTokenExpire`    | `86400`               | Verification token lifetime in seconds.                                 |
-| `user.passwordMinLength`               | `8`                   | Minimum password length enforced by `SignupForm` / `ResetPasswordForm`. |
-| `user.passwordResetTokenExpire`        | `3600`                | Reset token lifetime in seconds.                                        |
-| `user.resendVerificationEmailCooldown` | `60`                  | Cooldown between "resend verification" requests.                        |
+`config/web.php` configures:
 
-## `config/web.php`
+- `actionNamespace` as `app\usecases`, allowing routes such as `site/home` to resolve standalone action classes.
+- `user.identityClass` as `app\usecases\shared\user\User`.
+- `yii\rbac\PhpManager` using the preserved files under `rbac/`.
+- `site/error` as the standalone error action.
+- pretty URLs without the entry-script name.
+- CSRF validation and a required cookie validation key.
+- `ViewRendererInterface` with the bundled `PhpViewRenderer` implementation.
+- `MailerInterface` as a singleton Symfony Mailer adapter using templates under `resources/mail`.
 
-Wires the web application:
+The default mailer uses file transport and writes messages below `runtime/`. Replace that development setting with a
+real transport before production.
 
-- `authManager` ; `yii\rbac\PhpManager`, fed by `rbac/items.php`, `rbac/rules.php`, `rbac/assignments.php`.
-- `user.identityClass` ; points at `app\models\User` from `src/models/User.php`.
-- `user.loginUrl` ; `['user/login']`.
-- `mailer` ; `MailerInterface` with `useFileTransport: true` and view path set to `@app/resources/mail`. **Disable
-  `useFileTransport` for production** and configure an SMTP transport instead.
-- `errorHandler.errorAction` ; `site/error` (rendered by `SiteController::actionError`).
-- `urlManager.enablePrettyUrl` and `showScriptName: false`.
-- `request.cookieValidationKey` ; **placeholder `''`**; set to a 32-byte secret before deployment.
+When `YII_ENV=dev`, the debug module is bootstrapped. The debug package is a runtime dependency because the shipped
+configuration references its module class.
 
-## `config/console.php`
+## Console application
 
-Console application configuration. Highlights:
+`config/console.php` provides:
 
-- `controllerMap.migrate` ; `MigrateController` with `migrationNamespaces: ['app\\migrations']`.
-- `controllerMap.serve` ; `ServeController` with `docroot: '@app/public'` (for `./yii serve`).
-- `aliases.@app/migrations`, `@npm`, `@tests`.
+- `app\commands` as the controller namespace.
+- `app\migrations` as the migration namespace.
+- the same database, cache, RBAC, and parameter configuration used by the application.
+- `./yii serve` with `public/` as its document root.
 
-## `config/test.php`
+## Test application
 
-Test-time configuration overrides:
+`config/test.php` is isolated from the normal application configuration. It uses the test database, disables CSRF for
+test requests, captures mail through file transport, and binds the same PHP view renderer used by the application.
 
-- Uses `config/test_db.php` instead of `db.php`.
-- Disables CSRF.
-- Loads `app\tests\support\MailerBootstrap` to capture outgoing messages in tests.
-- Blanks `turnstile.secretKey` so contact-form tests do not hit Cloudflare.
+`public/index-test.php` is fail-closed: it returns `404` unless the process environment contains `YII_ENV=test`, and it
+then accepts only loopback clients. These test files and `config/test_db.php` are excluded from consumer scaffolds; they
+exist only for this package's test suite.
 
-## `rbac/`
+## RBAC
 
-Three preserve-mode files implementing Yii2's `PhpManager` RBAC:
+Yii `PhpManager` reads these preserved files:
 
-- `rbac/items.php` ; roles and permissions.
-- `rbac/rules.php` ; rule classes (e.g. "owner can update own post").
-- `rbac/assignments.php` ; user-to-role assignments.
+- `rbac/items.php` for roles and permissions.
+- `rbac/rules.php` for serialized rule definitions.
+- `rbac/assignments.php` for user assignments.
 
-Edit these directly or replace the backend with a different `authManager` in `config/web.php` / `config/console.php`.
+Applications may edit these files or replace the `authManager` component with another Yii RBAC backend.
 
-## Mail templates
+## Mail and views
 
-Preserve mode does **not** cover `resources/mail/*` (those are under `replace`).
-Rebrand the templates in place if you want to keep them tracked by scaffold, or `scaffold eject` individual templates to
-take full ownership.
-
-Files:
-
-- `resources/mail/emailVerify-html.php`
-- `resources/mail/emailVerify-text.php`
-- `resources/mail/passwordResetToken-html.php`
-- `resources/mail/passwordResetToken-text.php`
-- `resources/mail/layouts/html.php`
-- `resources/mail/layouts/text.php`
+Mail templates under `resources/mail/` and page templates under `resources/views/` use `replace` mode. An unmodified
+template receives provider updates; a consumer-modified template is skipped. Use `scaffold eject` when the application
+should own a template permanently.
 
 ## Production checklist
 
-- [ ] Replace `request.cookieValidationKey` in `config/web.php` with a 32-byte secret.
-- [ ] Change `admin.password` in `config/params.php` before running migrations ; or
-      delete the seeded admin and create your own.
-- [ ] Disable `useFileTransport` in `config/web.php` and configure an SMTP transport.
-- [ ] Set real `adminEmail`, `senderEmail`, `senderName`, `supportEmail`.
-- [ ] Replace the Cloudflare Turnstile test keys with your production site keys.
-- [ ] Point `config/db.php` at a real database.
-- [ ] Run migrations (`./yii migrate`).
-- [ ] Clear `runtime/` on deploy and ensure it is writable by the web server.
+- [ ] Set `YII_ENV=prod`; `public/index.php` otherwise defaults to the development environment.
+- [ ] Use a generated, private `cookieValidationKey`.
+- [ ] Replace the default administrator credentials before applying the seed migration.
+- [ ] Configure a production database and restrict its credentials.
+- [ ] Replace file mail transport with the required production transport.
+- [ ] Set valid administrator, sender, and support email addresses.
+- [ ] Add application-specific rate limits and abuse controls to public form endpoints.
+- [ ] Review RBAC roles and assignments.
+- [ ] Keep `runtime/` and `public/assets/` writable only by the required service account.
+- [ ] Run migrations, tests, static analysis, and `composer audit` during deployment validation.
 
 ## Next steps
 
-- 📚 [Installation Guide](installation.md)
-- 📦 [Scaffold Workflow](scaffold.md)
-- 🎨 [Frontend Overlays](frontend-overlays.md)
-- 🧪 [Testing Guide](testing.md)
+- [Installation guide](installation.md)
+- [Scaffold workflow](scaffold.md)
+- [Presentation customization](frontend-overlays.md)
+- [Dependency policy](dependencies.md)
+- [Testing and quality](testing.md)

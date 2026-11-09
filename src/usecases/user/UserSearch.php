@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\usecases\user;
 
 use app\usecases\shared\user\User;
+use Override;
 use yii\data\ActiveDataProvider;
 
 /**
@@ -18,6 +19,7 @@ final class UserSearch extends User
     /**
      * Returns the validation rules for the search attributes.
      */
+    #[Override]
     public function rules(): array
     {
         return [

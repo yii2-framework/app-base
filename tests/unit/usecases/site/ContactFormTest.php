@@ -30,7 +30,6 @@ final class ContactFormTest extends Unit
             'phone' => '(555) 123-4567',
             'subject' => 'very important letter subject',
             'body' => 'body of current message',
-            'turnstileToken' => 'test-token',
         ];
 
         self::assertNotEmpty(

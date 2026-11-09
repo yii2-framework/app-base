@@ -8,17 +8,14 @@ use app\usecases\shared\view\ViewRendererInterface;
 use yii\web\{Action, Response};
 
 /**
- * Renders the application home page through the frontend overlay's {@see ViewRendererInterface}.
+ * Renders the application home page through the configured {@see ViewRendererInterface}.
  *
  * Route: `site/home` (also reached through the application `defaultRoute`).
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 final class HomeAction extends Action
 {
     /**
-     * Creates a new instance with the renderer supplied by the active frontend overlay.
+     * Creates a new instance with the configured renderer.
      *
      * @param ViewRendererInterface $view Renderer used to produce the home page.
      */
@@ -30,7 +27,7 @@ final class HomeAction extends Action
     /**
      * Renders the home page.
      *
-     * @return Response|string Rendered home view, or an `HTTP` response when the overlay sends headers directly.
+     * @return Response|string Rendered home view, or an `HTTP` response when the renderer sends headers directly.
      */
     public function run(): Response|string
     {

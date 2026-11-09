@@ -8,10 +8,10 @@ declare(strict_types=1);
  * Usage example:
  *
  * ```bash
- * // built-in server with router
+ * # Built-in server with router.
  * php -S localhost:8080 -t public public/router.php
  *
- * // or using Yii serve command
+ * # Or use the Yii serve command.
  * ./yii serve --router=public/router.php
  * ```
  */
@@ -31,5 +31,5 @@ if (
     return false;
 }
 
-// route everything else through index-test.php for test environment.
-require __DIR__ . '/index-test.php';
+// Route everything else through the development/production entry point.
+require __DIR__ . '/index.php';

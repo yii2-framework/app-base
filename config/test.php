@@ -61,5 +61,5 @@ return [
     'actionNamespace' => 'app\\usecases',
     'defaultRoute' => 'site/home',
     'language' => 'en-US',
-    'params' => [...$params, 'turnstile.secretKey' => ''],
+    'params' => $params,
 ];

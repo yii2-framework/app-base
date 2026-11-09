@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\tests\support\spies;
 
 use app\commands\HelloController;
+use Override;
 
 use function strlen;
 
@@ -24,6 +25,7 @@ final class HelloControllerSpy extends HelloController
     /**
      * @param string $string String to buffer instead of writing to `STDOUT`.
      */
+    #[Override]
     public function stdout($string)
     {
         $this->stdoutBuffer .= (string) $string;

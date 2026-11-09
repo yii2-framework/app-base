@@ -10,9 +10,6 @@ use yii\console\{Controller, ExitCode};
  * Echoes the first argument that you have entered.
  *
  * Provided as an example for learning how to create console commands.
- *
- * @copyright Copyright (C) 2026 Terabytesoftw.
- * @license https://opensource.org/license/bsd-3-clause BSD 3-Clause License.
  */
 class HelloController extends Controller
 {

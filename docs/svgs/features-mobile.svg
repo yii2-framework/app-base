@@ -11,7 +11,7 @@
         <rect class="box-bg" x="16" y="16" width="588" height="84" rx="6"/>
         <rect x="16" y="16" width="4" height="84" fill="#42b883"/>
         <text class="title" x="32" y="42">Console &amp; Web Entrypoints</text>
-        <text class="content" x="32" y="66">CLI &#8226; HelloController &#8226; index.php &#8226; index-test.php</text>
+        <text class="content" x="32" y="66">CLI &#8226; HelloController &#8226; production index.php</text>
         <text class="content" x="32" y="84">Built-in PHP server via router.php</text>
     </g>
 
@@ -28,7 +28,7 @@
         <rect x="16" y="216" width="4" height="84" fill="#42b883"/>
         <text class="title" x="32" y="242">Quality Tooling</text>
         <text class="content" x="32" y="266">PHPStan level max &#8226; Codeception 5.3 &#8226; PSR-12 / PER 3.0</text>
-        <text class="content" x="32" y="284">Mutation testing &#8226; composer-require-checker</text>
+        <text class="content" x="32" y="284">Rector &#8226; composer-require-checker</text>
     </g>
 
     <g>
@@ -52,6 +52,6 @@
         <rect x="16" y="516" width="4" height="84" fill="#42b883"/>
         <text class="title" x="32" y="542">User Authentication</text>
         <text class="content" x="32" y="566">Login &#8226; Signup &#8226; Password reset &#8226; Email verification</text>
-        <text class="content" x="32" y="584">ActiveRecord User + 8 form models</text>
+        <text class="content" x="32" y="584">ActiveRecord User + form and search models + contact workflow</text>
     </g>
 </svg>
